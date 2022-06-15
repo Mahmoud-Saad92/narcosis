@@ -28,3 +28,10 @@ $ mvn spring-boot:run
 or 
 $ java -jar target/licensing-service.jar
 ```
+
+## Contact
+
+I'd like you to email me on [Ma7moud_Sa3d](Ma7moud.Sa3d92@gmail.com) about anything you'd want to say about this software.
+
+### Contributing
+Feel free to file an issue if it doesn't work for your code sample. Thanks.
