@@ -1,32 +1,24 @@
 #stage 1
-#Start with a base image containing Java runtime
 FROM openjdk:17-alpine as build
 
-# Add Maintainer Info
-LABEL maintainer="Mahmoud Saad <ma7moud.sa3d92@gmail.com>"
+WORKDIR application
 
-# The application's jar file
-ARG JAR_FILE
+ARG JAR_FILE=target/*.jar
 
-# Add the application's jar to the container
-COPY ${JAR_FILE} app.jar
+COPY ${JAR_FILE} application.jar
 
-#unpackage jar file
-
-RUN mkdir -p target/dependency && (cd target/dependency; jar -xf /app.jar)
+RUN java -Djarmode=layertools -jar application.jar extract
 
 #stage 2
-#Same Java runtime
 FROM openjdk:17-alpine
 
-#Add volume pointing to /tmp
-VOLUME /tmp
+WORKDIR application
 
-#Copy unpackaged application to new container
-ARG DEPENDENCY=/target/dependency
-COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
-COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
-COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
+#Copies each layer displayed as a result of the jarmode command (java -Djarmode=layertools -jar .\licensing-service.jar list)
+COPY --from=build application/dependencies/ ./
+COPY --from=build application/spring-boot-loader/ ./
+COPY --from=build application/snapshot-dependencies/ ./
+COPY --from=build application/application/ ./
 
-#execute the application
-ENTRYPOINT ["java","-cp","app:app/lib/*","com.bazinga.eg.licensing.service.LicensingServiceApplication"]
+#Uses org.springframework.boot.loader.JarLauncher to execute the application
+ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
