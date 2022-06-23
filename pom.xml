@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.bazinga.eg.narcosis</groupId>
+    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>narcosis</artifactId>
+    <packaging>pom</packaging>
+
+    <name>narcosis-parent-pom</name>
+    <description>Parent Pom for the narcosis project</description>
+
+    <developers>
+        <developer>
+            <name>Ma7moud Sa3d</name>
+            <email>ma7moud.Sa3d92@gmail.com</email>
+            <organization>bazinga</organization>
+        </developer>
+    </developers>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.0</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <properties>
+        <java.version>17</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <dockerfile-maven-version>1.4.13</dockerfile-maven-version>
+        <docker.image.prefix>narcosis</docker.image.prefix>
+    </properties>
+
+    <modules>
+        <module>config-server</module>
+        <module>licensing-service</module>
+    </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <version>${dockerfile-maven-version}</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

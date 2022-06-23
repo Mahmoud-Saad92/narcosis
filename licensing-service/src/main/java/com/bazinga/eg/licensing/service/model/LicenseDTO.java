@@ -10,7 +10,7 @@ import org.springframework.hateoas.RepresentationModel;
 @Setter
 @ToString
 @Builder
-public class License extends RepresentationModel<License> {
+public class LicenseDTO extends RepresentationModel<LicenseDTO> {
 
     private int id;
     private String licenseId;

@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  database:
+    image: postgres:latest
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'narcosis_dev'
+    volumes:
+      - ../db/init.sql:docker-entrypoint-initdb.d/1-init.sql
+      - ../db/data.sql:docker-entrypoint-initdb.d/2-data.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      backend:
+        aliases:
+          - 'database'
+
+  config-server:
+    build:
+      context: ../config-server
+      dockerfile: Dockerfile
+    ports:
+      - '8071:8071'
+    environment:
+      ENCRYPT_KEY: "fje83Ki8403Iod87dne7Yjsl3THueh48jfuO9j4U2hf64Lo"
+    networks:
+      backend:
+        aliases:
+          - 'config-server'
+
+  licence-service:
+    build:
+      context: ../licensing-service
+      dockerfile: Dockerfile
+    ports:
+      - '8080:8080'
+    environment:
+      PROFILE: "dev"
+      CONFIG_SERVER_URI: "http://config-server:8071"
+      CONFIG_SERVER_PORT: "8071"
+      DATABASE_SERVER_PORT: "5432"
+      ENCRYPT_KEY: "IMSYMMETRIC"
+    depends_on:
+      database:
+          condition: service_healthy
+      config-server:
+        condition: service_started
+    networks:
+      backend:
+        aliases:
+          - 'license-service'
+
+networks:
+  backend:
+    driver: bridge
