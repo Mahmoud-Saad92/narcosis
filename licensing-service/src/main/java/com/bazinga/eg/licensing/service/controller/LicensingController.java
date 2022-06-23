@@ -1,6 +1,6 @@
 package com.bazinga.eg.licensing.service.controller;
 
-import com.bazinga.eg.licensing.service.model.License;
+import com.bazinga.eg.licensing.service.model.LicenseDTO;
 import com.bazinga.eg.licensing.service.service.LicensingService;
 import com.bazinga.eg.licensing.service.util.LicenseOperator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +25,8 @@ public class LicensingController {
     }
 
     @GetMapping(value = "/{licenseId}")
-    public ResponseEntity<License> getLicense(@PathVariable("organizationId") final String organizationId,
-                                              @PathVariable("licenseId") String licenseId) {
+    public ResponseEntity<LicenseDTO> getLicense(@PathVariable("organizationId") final String organizationId,
+                                                 @PathVariable("licenseId") String licenseId) {
 
         return licensingService
                 .getLicense(licenseId, organizationId)
@@ -36,22 +36,22 @@ public class LicensingController {
 
     @PostMapping
     public ResponseEntity<String> createLicence(@PathVariable("organizationId") String organizationId,
-                                                @RequestBody License license,
+                                                @RequestBody LicenseDTO licenseDTO,
                                                 @RequestHeader(value = "Accept-Language", required = false) Locale locale) {
 
         return licensingService
-                .createLicense(license, organizationId, locale)
+                .createLicense(licenseDTO, organizationId, locale)
                 .map(v -> new ResponseEntity<>(v, HttpStatus.CREATED))
                 .orElse(new ResponseEntity<>(null, HttpStatus.NO_CONTENT));
     }
 
     @PutMapping
     public ResponseEntity<String> updateLicence(@PathVariable("organizationId") String organizationId,
-                                                @RequestBody License license,
+                                                @RequestBody LicenseDTO licenseDTO,
                                                 @RequestHeader(value = "Accept-Language", required = false) Locale locale) {
 
         return licensingService
-                .updateLicense(license, organizationId, locale)
+                .updateLicense(licenseDTO, organizationId, locale)
                 .map(v -> new ResponseEntity<>(v, HttpStatus.ACCEPTED))
                 .orElse(new ResponseEntity<>(null, HttpStatus.NOT_MODIFIED));
     }
@@ -66,7 +66,7 @@ public class LicensingController {
                 .orElse(new ResponseEntity<>(null, HttpStatus.NOT_MODIFIED));
     }
 
-    private final LicenseOperator<License, String, License> licenseOperator = (l, s) -> {
+    private final LicenseOperator<LicenseDTO, String, LicenseDTO> licenseOperator = (l, s) -> {
         l.add(
                 linkTo(methodOn(LicensingController.class).getLicense(s, l.getLicenseId())).withSelfRel(),
                 linkTo(methodOn(LicensingController.class).createLicence(s, l, null)).withRel("createLicence"),

@@ -1,0 +1,32 @@
+#management.endpoints.web.base-path=/
+#management.endpoints.enabled-by-default=false
+#management.endpoint.health.enabled=true
+#management.endpoint.health.show-details=always
+#management.health.db.enabled=false
+#management.health.diskspace.enabled=true
+
+spring:
+  application:
+    name: licensing-service
+  profiles:
+    active: dev
+  config:
+    import: 'optional:configserver:http://localhost:8071'
+#  cloud:
+#    config:
+#      uri: http://localhost:8071
+
+management:
+  endpoints:
+    enabled-by-default: false
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+    env:
+      enabled: true
+  health:
+    db:
+      enabled: false
+    diskspace:
+      enabled: true

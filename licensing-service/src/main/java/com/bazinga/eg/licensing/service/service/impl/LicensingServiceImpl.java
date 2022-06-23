@@ -1,6 +1,6 @@
 package com.bazinga.eg.licensing.service.service.impl;
 
-import com.bazinga.eg.licensing.service.model.License;
+import com.bazinga.eg.licensing.service.model.LicenseDTO;
 import com.bazinga.eg.licensing.service.service.LicensingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +27,11 @@ public class LicensingServiceImpl implements LicensingService {
     }
 
     @Override
-    public Optional<License> getLicense(String licenseId, String organizationId) {
+    public Optional<LicenseDTO> getLicense(String licenseId, String organizationId) {
         log.info("retrieving request for licence with id {} on organization with id {}", licenseId, organizationId);
 
         return Optional.of(
-                License
+                LicenseDTO
                         .builder()
                         .id(integerSupplier.get())
                         .licenseId(licenseId)
@@ -44,34 +44,34 @@ public class LicensingServiceImpl implements LicensingService {
     }
 
     @Override
-    public Optional<String> createLicense(License license, String organizationId, Locale locale) {
+    public Optional<String> createLicense(LicenseDTO licenseDTO, String organizationId, Locale locale) {
         log.info("creating request for a new licence on organization with id {}", organizationId);
 
         Optional<String> responseMsg = Optional.empty();
 
-        if (Objects.nonNull(license)) {
-            license.setOrganizationId(organizationId);
+        if (Objects.nonNull(licenseDTO)) {
+            licenseDTO.setOrganizationId(organizationId);
 //            responseMsg = Optional.of(String.format("This is the post and the object is: %s", license));
-            responseMsg = Optional.of(String.format(messages.getMessage("license.create.message", null, locale), license));
+            responseMsg = Optional.of(String.format(messages.getMessage("license.create.message", null, locale), licenseDTO));
 
-            log.info("successfully creating a new licence with id {} on organization with id {}", license.getId(), organizationId);
+            log.info("successfully creating a new licence with id {} on organization with id {}", licenseDTO.getId(), organizationId);
         }
 
         return responseMsg;
     }
 
     @Override
-    public Optional<String> updateLicense(License license, String organizationId, Locale locale) {
+    public Optional<String> updateLicense(LicenseDTO licenseDTO, String organizationId, Locale locale) {
         log.info("updating request for a licence on organization with id {}", organizationId);
 
         Optional<String> responseMsg = Optional.empty();
 
-        if (Objects.nonNull(license)) {
-            license.setOrganizationId(organizationId);
+        if (Objects.nonNull(licenseDTO)) {
+            licenseDTO.setOrganizationId(organizationId);
 //            responseMsg = Optional.of(String.format("This is the put and the object is: %s", license));
-            responseMsg = Optional.of(String.format(messages.getMessage("license.update.message", null, locale), license));
+            responseMsg = Optional.of(String.format(messages.getMessage("license.update.message", null, locale), licenseDTO));
 
-            log.info("Successfully updating licence with id {} on organization with id {}", license.getId(), organizationId);
+            log.info("Successfully updating licence with id {} on organization with id {}", licenseDTO.getId(), organizationId);
         }
 
         return responseMsg;
